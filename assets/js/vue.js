@@ -19,8 +19,76 @@ const Home = {
     data: ()=>{
         return {
             products,
+            searchKey: '',
+            liked: [],
+            cart: []
+        }
+    },
+    computed:{
+         filtedList(){
+             return this.products.filter((product)=>{
+                  return product.description.toLowerCase().includes(this.searchKey.toLowerCase());
+             });
+         }, 
+         getLikeCookie(){
+            let valueCookie = JSON.parse($cookies.get('like')) ;
+            valueCookie == null ? this.liked = [] : this.liked = valueCookie;
+         }  
+    },
+    methods:{
+        setLikeCookie(){
+            document.addEventListener('input',()=>{
+                setTimeout(()=>{
+                    $cookies.set('like',JSON.stringify(this.liked));
+                },300);
+            })
+        },
+        mounted: ()=>{
+            this.getLikeCookie;
+        },
+        addToCart(produit){
+            for(let i = 0 ;i < this.cart.length; i++){
+                if(this.cart[i].id == produit.id ){
+                   return this.cart[i].quantite++;
+                }
+            }
+            this.cart.push({
+                id: produit.id,
+                description: produit.description,
+                img: produit.img,
+                price: produit.price,
+                quantite: 1
+            });
+        },
+        cardOperation(key,produit,operationName){
+           switch (operationName) {
+               case 'add':
+                   //this.cart[key].quantite++;
+                   produit.quantite = produit.quantite + 1;
+                   break;
+                case 'minus':
+                    this.cart[key].quantite > 0 ? this.cart[key].quantite--: this.deleteCard(produit,key);
+                    break;
+                case 'delete':{
+                   this.deleteCard(produit,key);
+                }
+                break;
+               default:
+                   break;
+           }
+        },
+        deleteCard(produit,key){
+            /* prémière méthode:
+            const cart = this.cart.filter((p)=>{
+                return produit !== p;
+            });
+            this.cart = cart;*/
+            //  deuxième méthode
+            this.$delete(this.cart,key);
         }
     }
+
+    
 }
 const UserSetting = {
     template: '<h1>User setting</h1>',

@@ -31,7 +31,7 @@
           <li>
             <router-link to="/wish-list">
               <i class="fas fa-heart"></i>
-              <span id="nav-notif"></span>
+              <span id="nav-not"></span>
             </router-link>
           </li>
           <li>
@@ -48,10 +48,14 @@
       <div class="home-container">
          <h1>Articles</h1>
          <!-- search display -->
+         <input type="search" v-model="searchKey" id="search"
+         placeholder="Rechercher..." autocomplete="off">
+         <span v-if="searchKey && filtedList.length >=1">{{filtedList.length}} résultat<span v-if="filtedList.length >= 2">s</span>
+        </span>
          <!-- card display -->
          <div class="card-cart-container">
            <div class="card-container">
-             <div class="card" v-for="produit in products">
+             <div class="card" v-for="produit in filtedList">
                <div class="img-container">
                   <img v-bind:src="produit.img" alt="produit.description">
                </div>
@@ -63,22 +67,63 @@
 
                <div class="card-icons">
                  <div class="like-container">
-                   <input type="checkbox" name="checkbox" v-bind:id="produit.id"/>
+                   <input type="checkbox" 
+                          name="checkbox"  
+                          v-bind:id="produit.id"
+                          :value="produit.id"
+                          v-model="liked"
+                          @click="setLikeCookie()"
+                   />
                    <label v-bind:for="produit.id">
                      <i class="fas fa-heart"></i>
                    </label>
                   </div>
                    <div class="add-to-cart">
-                     <button><i class="fas fa-shopping-cart"></i></button>
+                     <button v-on:click="addToCart(produit)"><i class="fas fa-shopping-cart"></i></button>
                   </div>
                </div>
              </div>
              </div>
-          </div>
+             <div id="no-resultat" v-if="filtedList.length == 0">
+               <h3> Désolé</h3>
+               <p> Aucun résultat trouvé</p>
+              </div>
+              <!-- cart display  -->
+              <div v-if="cart.length > 0" class="shopping-cart" id="shopping-cart">
+                <h2>Panier </h2>
+                <div class="item-group">
+                  <div v-for="produit,key in cart" v-bind:key="produit.id" class="item">
+                        <div class="img-container">
+                          <img v-bind:src="produit.img" alt="produit.description">
+                        </div>
+                        <div class="item-description">
+                          <h4>{{ produit.description }}</h4>
+                          <p> {{ produit.price }}$</p>
+                        </div>
+                        <div class="item-quantity">
+                         <h6>Quantité:  {{produit.quantite}}</h6>
+                         <div class="cart-icons">
+                          <button v-on:click="cardOperation(key,produit, 'add')">
+                            <i class="fa fa-plus"></i>
+                          </button>
+                          <button v-on:click="cardOperation(key,produit, 'minus')">
+                            <i class="fa fa-minus"></i>
+                          </button>
+                          <button v-on:click="cardOperation(key,produit, 'delete')">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                        </div>
+                        </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
         </div>
   </script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-router/dist/vue-router.js "></script>
+  <script src="https://unpkg.com/vue-cookies@1.7.4/vue-cookies.js"></script>
   <script src="./assets/js/vue.js"></script>
   <script src="./assets/js/script.js"></script>
 </body>
