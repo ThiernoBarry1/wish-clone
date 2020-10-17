@@ -89,9 +89,10 @@
                <p> Aucun résultat trouvé</p>
               </div>
               <!-- cart display  -->
+              <transition name="cart-anim">
               <div v-if="cart.length > 0" class="shopping-cart" id="shopping-cart">
                 <h2>Panier </h2>
-                <div class="item-group">
+                <transition-group name="item-group" tag="div" class="item-group">
                   <div v-for="produit,key in cart" v-bind:key="produit.id" class="item">
                         <div class="img-container">
                           <img v-bind:src="produit.img" alt="produit.description">
@@ -101,23 +102,30 @@
                           <p> {{ produit.price }}$</p>
                         </div>
                         <div class="item-quantity">
-                         <h6>Quantité:  {{produit.quantite}}</h6>
-                         <div class="cart-icons">
-                          <button v-on:click="cardOperation(key,produit, 'add')">
-                            <i class="fa fa-plus"></i>
-                          </button>
-                          <button v-on:click="cardOperation(key,produit, 'minus')">
-                            <i class="fa fa-minus"></i>
-                          </button>
-                          <button v-on:click="cardOperation(key,produit, 'delete')">
-                            <i class="fa fa-trash"></i>
-                          </button>
+                          <h6>Quantité:  {{produit.quantite}}</h6>
+                          <div class="cart-icons">
+                            <button v-on:click="cardOperation(key,produit, 'add')">
+                              <i class="fa fa-plus"></i>
+                            </button>
+                            <button v-on:click="cardOperation(key,produit, 'minus')">
+                              <i class="fa fa-minus"></i>
+                            </button>
+                            <button v-on:click="cardOperation(key,produit, 'delete')">
+                              <i class="fa fa-trash"></i>
+                            </button>
                         </div>
-                        </div>
+                      </div>
+                    </div>
+                  </transition-group>
+                <div class="grand-total">
+                  <div class="total">
+                    <h2>Total</h2>
+                    <h2>{{ cartTotalAmount }} $</h2>
                   </div>
-
+                  <h6>Total item:   {{ itemTotalAmount }}</h6>
                 </div>
               </div>
+            </transition>
             </div>
         </div>
   </script>

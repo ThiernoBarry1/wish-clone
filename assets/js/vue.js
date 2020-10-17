@@ -33,7 +33,21 @@ const Home = {
          getLikeCookie(){
             let valueCookie = JSON.parse($cookies.get('like')) ;
             valueCookie == null ? this.liked = [] : this.liked = valueCookie;
-         }  
+         } ,
+         cartTotalAmount(){
+             let total = 0;
+             for(let i=0;i<this.cart.length ;i++){
+                 total += this.cart[i].quantite * this.cart[i].price ;
+             }
+             return total;
+         },
+         itemTotalAmount(){
+             let itemTotal = 0;
+             for( let item in this.cart){
+                 itemTotal += this.cart[item].quantite;
+             }
+             return itemTotal;
+         }
     },
     methods:{
         setLikeCookie(){
